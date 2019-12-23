@@ -1,5 +1,7 @@
 dnPath = "E:\\DN\\Game\\DragonNest\\DragonNest.exe"  #龙之谷exe路径
 openMaxNum = 20 #开多次分解 建议20
+BagKey = "i" #背包快捷键
+
 
 isRun = 0
 
@@ -18,9 +20,10 @@ def dt(k):
     type(k)
 
 def openLyBag():
-
+    global openMaxNum
+    
     if not exists("Left"):
-        dt("I")
+        dt(BagKey)
         wait(1)
         
     openNum = 0;
@@ -39,7 +42,7 @@ def openLyBag():
 
 def openFenJie():
     if not exists("Left"):
-        dt("I")
+        dt(BagKey)
         wait(1)
 
     dt(Key.ESC)
@@ -51,6 +54,8 @@ def openFenJie():
     wait(3)
 
 def longYuFenJie():
+    openFenJie()
+    
     ly = ["LongYu1","LongYu2","LongYu3","LongYu4","LongYu5","LongYu6"]
     fenJieNum = 0
     
@@ -66,6 +71,8 @@ def longYuFenJie():
     closeFenJie()
 
 def longYuFenJiev2():
+    openFenJie()
+    
     ly = ["LongYu1","LongYu2","LongYu3","LongYu4","LongYu5","LongYu6"]
     fenJieNum = 0
     maxNum = 4
@@ -114,13 +121,18 @@ def goFenJie():
 def closeFenJie():
     dt(Key.ESC)
     wait(0.5)
-    dt("I")
+    
+    if not exists("Left"):
+        dt(BagKey)
+        wait(1)
+    
     wait(1)
     
 def Init():
     Settings.setShowActions(True)
     Settings.MoveMouseDelay = 0
     setThrowException(False)
+    
     # 提示等待
     popup("CTRL+F2 On/Off")
      
@@ -133,11 +145,7 @@ def loop():
             Debug.user("Run...")
             # 打开龙玉袋子
             openLyBag()
-            
-            openFenJie()
             longYuFenJiev2()
-
-            openFenJie()
             longYuFenJiev2()
 
         if isRun == 2:
@@ -146,7 +154,8 @@ def loop():
         
 def openApp(event):
     global isRun
-     
+    global dnPath
+    
     if isRun == 1:
         isRun = 2
         Debug.user("app close")
@@ -154,24 +163,24 @@ def openApp(event):
 
    
     dn = App("DragonNest")
+    
     if not dn.hasWindow():
         App.open(dnPath)
         wait("Title")
         dn.focus()
 
-    titleM = find("Title")
-    wait(1)
     
     isRun = 1; 
-
     Debug.user("app Start")
+    
     loop()
-
+   
 
 def testFindFail():
     setThrowException(False)
     allLy = findAll("LongYu1")
     print allLy == None 
+
 
 Init()
 Env.addHotkey(Key.F2, KeyModifier.CTRL, openApp)
