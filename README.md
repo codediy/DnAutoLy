@@ -2,4 +2,3 @@
 
 [Sikulix](http://www.sikulix.com/)
 
-  "# DnAutoLy" 
